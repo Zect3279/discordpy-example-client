@@ -31,5 +31,28 @@ async def on_message(message):
         # https://discordpy.readthedocs.io/ja/latest/api.html?highlight=send#discord.abc.Messageable.send
         await message.channel.send("Hello World")  # 何らかしらのメッセージが送られたチャンネルに"Hello World"を送信する
 
+    elif message.content.startswith("det# count"):
+    # messageの中にあるメッセージの内容が、"det# count"から始まる時
+        count = message.content[10:]
+        # メッセージ内容の11文字目以降をcountとする
+        
+        # try/exceptについて
+        # https://note.nkmk.me/python-try-except-else-finally/
+        try:
+            count = int(count)
+            # message.contentはstr型だから、forで回すためにint型に変換
+        except:
+            # 数字以外はint型に変換できないから、変換しようとする内容が数字でなければエラーが出る
+            await message.channel.send("det# conut <秒数[int]>")
+
+        edit = await message.channel.send(f"10\n■■■■■■■■■■")
+        for i in range(count):
+            # countの回数実行する
+            num = count - i
+            await edit.edit(content=f"{num}\n{'■'*num}")
+            # discord.Message.editについて
+            # https://discordpy.readthedocs.io/en/latest/api.html#discord.Message.edit
+            await asyncio.sleep(0.9)
+        await edit.edit(content="終了")
 # 環境変数からTOKENと一致する名前の項目を読み込んでいる。
 client.run(os.environ["TOKEN"])
